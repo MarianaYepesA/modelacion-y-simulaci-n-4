@@ -24,27 +24,30 @@ def desv_est(datos):
     return math.sqrt(coeff*suma_desvs)
 
 
-def asimetria(datos):
-    n = len(datos)  # longitud de datos
-    s = desv_est(datos=datos)  # confused
-    m = media(datos=datos)
+def asimetria(data: list):
+    n = len(data)  # longitud de datos
+    s = desv_est(datos=data)  # confused
+    m = media(datos=data)
     coeff = n/((n-1)*(n-2))
     estim_asm = 0
-    for i in datos:
+    for i in data:
         desv = i - m
         estim_asm += (desv/s)**3
     return coeff*estim_asm
 
 
-def kurtosis(datos):
-    n = len(datos)
-    m = media(datos=datos)
-    s = desv_est(datos=datos)
-    coeff = (n*(n+1))/((n-1)*(n-1)*(n-3))
+def kurtosis(data: list, len: int):
+    n = len
+    m = media(datos=data)
+    s = desv_est(datos=data)
+    denom1 = (n-1)*(n-2)*(n-3)
+    coeff = (n*(n+1))/denom1
     sum_par = 0
-    for i in datos:
-        sum_par += ((i-m)/s)**4
-    diff = (3*((n-1)**2))/((n-2)(n-3))
+    for i in data:
+        sum_par += (i-m)**4
+    sum_par = sum_par/(s**4)
+    denom2 = (n-2)*(n-3)
+    diff = (3*((n-1)**2))/denom2
     kurt = (coeff*sum_par)-diff
     return kurt
 
@@ -62,17 +65,17 @@ def percentls(datos: list, quantil: float):
     return percentil
 
 
-def stats(datos):
-    length = len(datos)
-    mu = media(datos=datos)
-    sd = desv_est(datos=datos)
-    asim = asimetria(datos=datos)
-    kurt = kurtosis(datos=datos)
-    minim = datos[0]
-    Q1 = percentls(datos=datos, quantil=25)
-    Q2 = percentls(datos=datos, quantil=50)
-    Q3 = percentls(datos=datos, quantil=75)
-    maxim = datos[-1]
+def stats(data: list):
+    length = len(data)
+    mu = media(data)
+    sd = desv_est(datos=data)
+    asim = asimetria(data=data)
+    kurt = kurtosis(data=data, len=length)
+    minim = data[0]
+    Q1 = percentls(datos=data, quantil=25)
+    Q2 = percentls(datos=data, quantil=50)
+    Q3 = percentls(datos=data, quantil=75)
+    maxim = data[-1]
     est_dscrp = [mu, sd, asim, kurt, minim, Q1, Q2, Q3, maxim]
     print(est_dscrp)
     return est_dscrp
@@ -80,10 +83,10 @@ def stats(datos):
 # Estadísticos Estimados
 
 
-def est_media(class_marks, freq_rel):
+def est_media(class_marks: list, freq_rel: list):
     est_mean = 0
     for i in range(len(class_marks)):
-        est_mean += class_marks[i]*freq_rel
+        est_mean += class_marks[i]*freq_rel[i]
     return est_mean
 
 
@@ -147,15 +150,14 @@ def est_stats(tabla_freq, marc_clases: dict):
     marcas = list(tabla_freq['Mark'])
     mu = est_media(marcas, freq_rel=freq_rel)
     sd = est_stdev(marcas, freq_abs=freq_abs, mean=mu, n=length)
-    asim = est_asm(marcas, freq_abs=freq_abs, mean=mu, std=sd)
-    kurt = est_kur(marcas, freq_abs=freq_abs, mean=mu, std=sd)
+    asim = est_asm(marcas, freq_abs=freq_abs, mean=mu, std=sd, n=length)
+    kurt = est_kur(marcas, freq_abs=freq_abs, mean=mu, std=sd, n=length)
     minim = liminfs[0]
     Q1 = percentil(marc_clases, freq_abs_c, 25)
     Q2 = percentil(marc_clases, freq_abs_c, 50)
     Q3 = percentil(marc_clases, freq_abs_c, 75)
     maxim = limsups[-1]
     est_dscrp = [mu, sd, asim, kurt, minim, Q1, Q2, Q3, maxim]
-    print(est_dscrp)
     return est_dscrp
 
 ################################################################################
@@ -166,7 +168,7 @@ def stat_frame(crudos: list, sint: list, estims: list):
                      'kurt', 'MIN', 'Q1', 'Q2', 'Q3', 'MAX']
     row_labels = ['Crudos', 'Sint', 'Estms']
     display = [crudos, sint, estims]
-    stat_mat = pd.Dataframe(display, column_labels, row_labels)
+    stat_mat = pd.DataFrame(display, row_labels, column_labels)
     stat_mat = stat_mat.transpose()
     print(stat_mat)
     return stat_mat

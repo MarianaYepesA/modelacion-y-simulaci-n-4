@@ -1,3 +1,4 @@
+import random
 from orden_y_sinth import *
 from estadisticos_desc import *
 import pandas as pd
@@ -15,6 +16,7 @@ def main():
     print('Cuantas marcas de clase se necesesitan?:', end=" ")
     nu_marcs = int(input())
     marc_clases = marcas_de_clase(column, nu_marcs)
+    num_class = num_marca(marc_clases)
     print('Cuatos datos sintéticos necesita generar?:', end=' ')
     num_sint_dat = int(input())
     print('\n')
@@ -22,15 +24,6 @@ def main():
     print('Datos Muestrales')
     tabla_muestra = tabla_frecuencia(column, nu_marcs)
     frecu_relat_M = tabla_muestra['Rel Freq']
-    cum_frecu_a = list(tabla_muestra['CumulativeA'])
-    print('-----------------------------------------------------------------------------------------------')
-    print('Estadísticos Muestrales')
-
-    print('Media: '+str(media(column)))
-    print('Desv Est: '+str(desv_est(column)))
-    print('Media: '+str(media(column)))
-    print('Mediana: ' + str(mediana(column)))
-    print('Q1 '+str(percentil(marc_clases, cum_frecu_a, 25)))
     print('-----------------------------------------------------------------------------------------------')
 
     print('DATOS SINTÉTICOS')
@@ -38,13 +31,44 @@ def main():
     tabla_sint = tabla_frecuencia(column_sint, nu_marcs)
 
     print('-----------------------------------------------------------------------------------------------')
-    print('Estadísticos de Datos Sintéticos')
+    stat_crudos = stats(column)
+    stat_sinth = stats(column_sint)
+    stat_stims = est_stats(tabla_muestra, marc_clases=marc_clases)
+    tabla_estats = stat_frame(stat_crudos, stat_sinth, stat_stims)
+    print(tabla_estats)
 
-    print('Media: '+str(media(column_sint)))
-    print('Desv Est: '+str(desv_est(column_sint)))
-    print('Media: '+str(media(column_sint)))
-    print('Mediana: ' + str(mediana(column_sint)))
 
     # print(column)
     # print(datos)
 main()
+
+
+def test_kurtosis():
+    # Test 1: using a sample data set
+    data = [random.randint(1, 100) for i in range(20)]
+    len_data = len(data)
+    expected_kurtosis = -1.2
+    k = kurtosis(data, len_data)
+    assert abs(
+        k - expected_kurtosis) < 0.6, f"Expected kurtosis of {expected_kurtosis}, but got {k}"
+
+    # Test 2: using a larger sample data set
+    data = [random.randint(1, 1000) for i in range(100)]
+    len_data = len(data)
+    expected_kurtosis = -1.2
+    k = kurtosis(data, len_data)
+    assert abs(
+        k - expected_kurtosis) < 0.6, f"Expected kurtosis of {expected_kurtosis}, but got {k}"
+
+    # Test 3: using a smaller sample data set
+    data = [random.randint(1, 10000) for i in range(10)]
+    len_data = len(data)
+    expected_kurtosis = -1.2
+    k = kurtosis(data, len_data)
+    assert abs(
+        k - expected_kurtosis) < 0.6, f"Expected kurtosis of {expected_kurtosis}, but got {k}"
+
+    print("All tests passed!")
+
+
+# eenvireen5_test_kurtosis()
