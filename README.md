@@ -1,2 +1,2 @@
-# modelacion-y-simulaci-n-4
-Repositorio de coledción para talleres de mode 4
+### modelacion-y-simulación-4
+Repositorio de colección para talleres de mode 4
