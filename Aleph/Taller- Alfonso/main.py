@@ -1,6 +1,5 @@
-import numpy as np
-from tabla_freq import *
-from sinteticos import *
+from orden_y_sinth import *
+from estadisticos_desc import *
 import pandas as pd
 
 
