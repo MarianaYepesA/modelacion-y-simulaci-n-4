@@ -83,7 +83,7 @@ def crear_tabla_freq(data, num_clases):
     return data
 def datos_sinteticos_uniformes(df,requeridos):
     l=[]
-    intervalos, freq_bef = df["Limites de clase (superior-inferior)"], df["Frecuencia relativa"]
+    intervalos = df["Limites de clase (superior-inferior)"] 
     for i in range(len(intervalos)):
       hasta=int(requeridos*df["Frecuencia relativa"][i])
       for j in range(hasta):
@@ -97,15 +97,6 @@ def datos_sinteticos_uniformes(df,requeridos):
     #lista_uniformes_aplanda = [item for sublist in t for item in sublist]
     #return lista_uniformes_aplanda
     return l
-    gen_data = pd.Series(dtype='float64')
-    n_data_bef = freq_table.iloc[-1]["Frecuencia absoluta acumulada"]
-    intervals, freq_bef = freq_table["Limites de clase (superior-inferior)"], freq_table["Frecuencia relativa"]
-    for i in range(len(intervals)):
-        data_numb = int(round(freq_bef.iloc[i]*k,0))
-        low_bound = intervals.iloc[i].left
-        high_bound = intervals.iloc[i].right
-        gen_data = pd.concat([gen_data,pd.Series(np.random.uniform(low_bound,high_bound,data_numb))])
-    return pd.DataFrame(gen_data)
 def percentil(tabla, n ,percentil):
     p = percentil/100 * n
     intervalos=tabla["Limites de clase (superior-inferior)"]
