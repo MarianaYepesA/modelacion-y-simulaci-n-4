@@ -20,24 +20,28 @@ def main():
     print('Cuatos datos sintéticos necesita generar?:', end=' ')
     num_sint_dat = int(input())
     print('\n')
-    print('---------------------------------------------------------------------------------------------------------------')
+    print('------------------------------------------------------------------------------------------------------------')
     print('Datos Muestrales')
     tabla_muestra = tabla_frecuencia(column, nu_marcs)
+    print(tabla_muestra)
     frecu_relat_M = tabla_muestra['Rel Freq']
-    print('-----------------------------------------------------------------------------------------------')
+    frec_rel_acum = list(tabla_muestra['Cumulative R'])
+    print('--------------------------------------------------------------------------------------------')
 
     print('DATOS SINTÉTICOS')
     column_sint = synthetic(marc_clases, frecu_relat_M, num_sint_dat)
     tabla_sint = tabla_frecuencia(column_sint, nu_marcs)
+    print(tabla_sint)
 
-    print('-----------------------------------------------------------------------------------------------')
+    print('-------------------------------------------------------------------------------------------')
     stat_crudos = stats(column)
     stat_sinth = stats(column_sint)
     stat_stims = est_stats(tabla_muestra, marc_clases=marc_clases)
     tabla_estats = stat_frame(stat_crudos, stat_sinth, stat_stims)
     print(tabla_estats)
 
-
+    histogramas(column, column_sint, nu_marcs)
+    spline_raw = percentile_spline(marc_clases, frec_rel_acum)
     # print(column)
     # print(datos)
 main()

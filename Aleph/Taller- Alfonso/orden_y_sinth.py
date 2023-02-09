@@ -2,6 +2,7 @@
 Visualización de Datos Crudos (Raw-Data) a través de su tabla de frecuencia
 """
 import pandas as pd
+import math
 from estadisticos_desc import *
 # Pandas como módulo de lectura para archivos csv
 
@@ -135,5 +136,4 @@ def tabla_frecuencia(datos_in, cortes_in):
                'Cumulative A', 'Rel Freq', 'Cumulative R']
     frame = pd.DataFrame(display, headers)
     frame = frame.transpose()
-    print(frame)
     return frame

@@ -5,6 +5,8 @@ Script con funciones para estadísticos descriptivos en Datos Crudos, Datos sint
 import numpy as np
 import pandas as pd
 import math
+import matplotlib.pyplot as plt
+from scipy.interpolate import CubicSpline
 
 
 def orden(datos):
@@ -77,7 +79,6 @@ def stats(data: list):
     Q3 = percentls(datos=data, quantil=75)
     maxim = data[-1]
     est_dscrp = [mu, sd, asim, kurt, minim, Q1, Q2, Q3, maxim]
-    print(est_dscrp)
     return est_dscrp
 
 # Estadísticos Estimados
@@ -160,7 +161,7 @@ def est_stats(tabla_freq, marc_clases: dict):
     est_dscrp = [mu, sd, asim, kurt, minim, Q1, Q2, Q3, maxim]
     return est_dscrp
 
-################################################################################
+###############################################################################
 
 
 def stat_frame(crudos: list, sint: list, estims: list):
@@ -169,6 +170,44 @@ def stat_frame(crudos: list, sint: list, estims: list):
     row_labels = ['Crudos', 'Sint', 'Estms']
     display = [crudos, sint, estims]
     stat_mat = pd.DataFrame(display, row_labels, column_labels)
-    stat_mat = stat_mat.transpose()
-    print(stat_mat)
     return stat_mat
+
+###############################################################################
+#Histogramas
+
+def histogramas(datos1, datos2, bins):
+    fig = plt.figure(figsize=(15, 5))
+
+    ax1 = fig.add_subplot(1, 2, 1)
+    ax2 = fig.add_subplot(1, 2, 2)
+
+    ax1.hist(datos1, bins=bins, histtype="bar", ec="black")
+    ax1.set_title("Raw data")
+    ax2.hist(datos2, bins=bins, histtype="bar", ec="black")
+    ax2.set_title("New data")
+    plt.show()
+    return fig
+
+###############################################################################
+#Interpolation
+
+def percentile_spline(class_mark,cum_rel_freq):
+    liminfs = list(class_mark.keys())
+    limsups = list(class_mark.values())
+    absiz   = [liminfs[0]]
+    for i in limsups:
+        absiz.append(i)
+    ordenadas = [0]
+    for i in cum_rel_freq:
+        ordenadas.append(i)
+    spl = CubicSpline(absiz, ordenadas)
+    lineplot = np.linspace(absiz[0], absiz[-1], num=500)
+    fig, ax = plt.subplots()
+    ax.plot(lineplot, spl(lineplot), label='Quantile interp')
+    plt.xlabel('x')
+    plt.ylabel('P(X < x)')
+    plt.title('FDA')
+    plt.show()   
+    return spl
+    
+    
