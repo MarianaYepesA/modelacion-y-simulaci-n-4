@@ -273,6 +273,6 @@ def datos2():
 
 print("--- Datos de la mixtura --- ")
 table1, estad1 = datos1()
-#print("\n--- Datos de la última columna de Portolfio5 --- ")
-#table2, estad2 = datos2()
+print("\n--- Datos de la última columna de Portolfio5 --- ")
+table2, estad2 = datos2()
 
