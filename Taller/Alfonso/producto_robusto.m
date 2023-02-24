@@ -8,9 +8,7 @@ function Mr = producto_robusto(A, B)
     Mr = [];
     for row = 1:index_filas
         vector_medianas = [];
-        fila = A(row,:);
         for col = 1:index_colum
-            columna = B(:,col);
             vector_elements = [];
             for element = 1:index_mults
                 vector_elements = [vector_elements, A(row,element)*B(element,col)];
@@ -21,5 +19,4 @@ function Mr = producto_robusto(A, B)
     end
     Mr = index_mults*Mr;
 end
-
 
